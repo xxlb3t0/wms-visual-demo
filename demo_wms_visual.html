@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8" />
+<title>Demo WMS Visual</title>
+<style>
+body { font-family: Arial, sans-serif; padding:20px; }
+.armario { display:inline-block; border:1px solid #333; padding:20px; margin:10px; cursor:pointer; }
+.prateleira { border:1px solid #666; margin:5px; padding:5px; width:160px; }
+.produto { background:#eef; margin:3px 0; padding:3px; cursor:move; }
+</style>
+</head>
+<body>
+<h1>Demo – Gestão Visual de Prateleiras</h1>
+<div id="planta"></div>
+<hr/>
+<div id="detalhe"></div>
+<script>
+// Mock backend
+const db = {
+ armarios: [{id:1,codigo:'A1'}],
+ prateleiras: {
+  1:[
+    {id:1,nivel:1,cap:20,produtos:[{id:1,ref:'P001',q:8}]},
+    {id:2,nivel:2,cap:15,produtos:[{id:1,ref:'P001',q:4}]}
+  ]
+ }
+};
+
+const planta = document.getElementById('planta');
+const detalhe = document.getElementById('detalhe');
+
+function renderPlanta(){
+ planta.innerHTML='';
+ db.armarios.forEach(a=>{
+  const d=document.createElement('div');
+  d.className='armario';
+  d.innerText='Armário '+a.codigo;
+  d.onclick=()=>abrirArmario(a.id);
+  planta.appendChild(d);
+ });
+}
+
+function abrirArmario(id){
+ detalhe.innerHTML='<h2>Armário A1</h2>';
+ db.prateleiras[id].forEach(p=>{
+  const d=document.createElement('div');
+  d.className='prateleira';
+  d.innerHTML='<b>Prateleira '+p.nivel+'</b><br/>Capacidade: '+p.cap+'<br/>';
+  p.produtos.forEach(pr=>{
+   const prd=document.createElement('div');
+   prd.className='produto';
+   prd.innerText=pr.ref+' – '+pr.q+' un';
+   d.appendChild(prd);
+  });
+  detalhe.appendChild(d);
+ });
+}
+
+renderPlanta();
+</script>
+</body>
+</html>
